@@ -1,0 +1,66 @@
+<title>我的文档-在线文库-自由的文库</title>
+{% extends 'content_base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% load static %}
+            <div class="jumbotron" style="background-image: url({% static 'index.png' %});background-size: cover">
+                <div class="text-center">
+                    <img src="/{{ user.profile.avatar }}" class="img-circle" style="height: 100px">
+                    <h2>{{ user.profile.nickname }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <h2>我的文档</h2>
+                <ul class="list-group">
+                    {% for o in object_list %}
+                        <li class="list-group-item">
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3><a href={% url 'document_detail' o.pk %}>{{ o.title }}</a></h3>
+                                    <p class="text-muted">
+                                        <i class="fa fa-eye"></i> {{ o.views }}
+                                        <i class="fa fa-user"></i> {{ o.author.profile.nickname }}
+                                        <i class="fa fa-archive"></i> {{ o.category.name }}
+                                        <i class="fa fa-clock-o"></i> {{ o.created_time }}
+                                        <i class="fa fa-thumbs-up"></i> {{ o.like }}
+                                        <i class="fa fa-thumbs-down"></i> {{ o.dislike }}
+                                        <a class="btn btn-default" href="{% url 'delete_document' %}?id={{ o.pk }}">
+                                            <i class="fa fa-trash"></i>删除
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <nav>
+                    <ul class="pager">
+                        <li class="current">{{ object_list.number }} / {{ object_list.paginator.num_pages }}</li>
+                        {% if object_list.has_previous %}
+                            <li class="previous"><a href="?page={{ object_list.previous_page_number }}"><span
+                                    aria-hidden="true">&larr;</span> 上一页</a></li>
+                        {% else %}
+                            <li class="previous disabled"><a href=""><span aria-hidden="true">&larr;</span> 上一页</a></li>
+                        {% endif %}
+                        {% if object_list.has_next %}
+                            <li class="next"><a href="?page={{ object_list.next_page_number }}">下一页 <span
+                                    aria-hidden="true">&rarr;</span></a></li>
+                        {% else %}
+                            <li class="next disabled"><a href="">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="jumbotron col-lg-4">
+                <h3>现在就上传文档，与用户分享您的内容</h3>
+                <a href="{% url 'upload' %}">
+                    <button type="button" class="btn btn-primary btn-lg btn-block">上传</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

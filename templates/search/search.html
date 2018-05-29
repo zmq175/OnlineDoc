@@ -1,0 +1,62 @@
+{% extends 'content_base.html' %}
+{% block title %}
+    <title>{{ query }}-搜索结果-在线文库-自由的文库</title>
+{% endblock %}
+{% load my_filters_and_tags %}
+{% block content %}
+    <div class="container">
+        {% if query %}
+            <div class="page-header">
+                <h1>「{{ query }}」 的搜索结果</h1>
+            </div>
+            <ul class="list-group">
+                {% for result in page.object_list %}
+                    <li class="list-group-item">
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <h3>
+                                    <a href={% url 'document_detail' result.object.pk %}>{% myhighlight result.object.title with query max-length 200 start_head True %}</a>
+                                </h3>
+                                <p class="text-muted">
+                                    <i class="fa fa-eye"></i> {{ result.object.views }}
+                                    <i class="fa fa-user"></i> {% myhighlight result.object.author.profile.nickname with query start_head True %}
+                                    <i class="fa fa-archive"></i> {{ result.object.category.name }}
+                                    <i class="fa fa-clock-o"></i> {{ result.object.created_time }}
+                                    <i class="fa fa-thumbs-up"></i> {{ result.object.like }}
+                                    <i class="fa fa-thumbs-down"></i> {{ result.object.dislike }}
+                                </p>
+                                {% for tag in result.object.tags.all %}
+                                    <span class="label label-default">{% myhighlight tag.name with query start_head True %}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <div class="alert alert-danger">没有搜索到结果</div>
+                {% endfor %}
+            </ul>
+            {% if page.has_previous or page.has_next %}
+                <nav>
+                    <ul class="pager">
+                        <li class="current">{{ page.page_number }} / {{ page.num_pages }}</li>
+                        {% if page.has_previous %}
+                            <li class="previous">
+                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}
+                        上一页
+                        {% if page.has_previous %}</a></li>{% endif %}
+                        {% if page.has_next %}
+                            <li class="next"><a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                        下一页
+                        &raquo;{% if page.has_next %}</a></li>{% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-danger">请输入搜索内容</div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% load static %}
+    <link href="{% static 'search.css' %}" rel="stylesheet">
+{% endblock %}

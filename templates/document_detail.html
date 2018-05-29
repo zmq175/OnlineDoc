@@ -1,0 +1,63 @@
+{% extends 'content_base.html' %}
+{% block title %}
+    <title>{{ object.title }}-在线文库-自由的文库</title>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="doc">
+            <div class="page-header">
+                <h1>{{ object.title }}</h1>
+                <div class="doc-info">
+                    <p class="text-muted">
+                        <img src="/{{ object.author.profile.avatar }}" class="img-circle"
+                             height="35px"> {{ object.author.profile.nickname }}
+                        <i class="fa fa-eye"></i> {{ object.views }}
+                        <i class="fa fa-archive"></i> {{ object.category.name }}
+                        <i class="fa fa-clock-o"></i> {{ object.created_time }}
+                        <i class="fa fa-thumbs-up"></i> {{ object.like }}
+                        <i class="fa fa-thumbs-down"></i> {{ object.dislike }}
+                    </p>
+                    {% for tag in object.tags.all %}
+                        <span class="label label-default">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="pdf-js">
+            <iframe src="/static/pdf_js/web/viewer.html?file=/static/document/pdf/{{ object.pdf_file }}"
+                    scrolling="no" frameborder="0" id="viewer" name="viewer" width="100%" height="1080"></iframe>
+        </div>
+        <div class="jumbotron">
+            {% if user.is_authenticated %}
+                <div class="row">
+                    <div class="col-lg-6">
+                        <a href="../{{ object.original_file }}">
+                            <button class="btn btn-primary btn-block btn-lg">下载文档</button>
+                        </a>
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" id="favorite"><i class="fa fa-star"></i>
+                        </button>
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" id="like"><i
+                                class="fa fa-thumbs-up"></i> {{ object.like }}</button>
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" id="dislike"><i
+                                class="fa fa-thumbs-down"></i> {{ object.dislike }} </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">登录以下载文档</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% load static %}
+    <script src={% static 'rate_btn.js' %}></script>
+    <script>
+        var id ={{ object.pk }}
+    </script>
+{% endblock %}
