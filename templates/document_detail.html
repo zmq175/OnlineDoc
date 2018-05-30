@@ -4,6 +4,11 @@
 {% endblock %}
 {% block content %}
     <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-home"></i> </a></li>
+            <li>{{ object.category.name }}</li>
+            <li>{{ object.title }}</li>
+        </ol>
         <div class="doc">
             <div class="page-header">
                 <h1>{{ object.title }}</h1>
@@ -30,7 +35,8 @@
         <div class="jumbotron">
             <div class="well">
                 <h4>分享</h4>
-                <div class="social-share" data-wechat-qrcode-helper="微信扫描二维码"></div>
+                <div class="social-share" data-wechat-qrcode-helper="微信扫描二维码"
+                     data-mobile-sites="weibo,qq,qzone,tencent,facebook,twitter"></div>
             </div>
             {% if user.is_authenticated %}
                 <div class="row">
@@ -56,11 +62,16 @@
                 <div class="alert alert-danger">登录以下载文档</div>
             {% endif %}
         </div>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-home"></i> </a></li>
+            <li>{{ object.category.name }}</li>
+            <li>{{ object.title }}</li>
+        </ol>
     </div>
 {% endblock %}
 {% block scripts %}
     {% load static %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/jquery.share.min.js"></script>
     <script src={% static 'rate_btn.js' %}></script>
     <script>
